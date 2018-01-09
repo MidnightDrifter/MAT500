@@ -20,7 +20,125 @@ namespace mat_290_framework
             knot_ = new List<float>();
             EdPtCont_ = true;
             rnd_ = new Random();
+            binomialCoefTable = new List<List<int>>();
+
+            //
+            for(int i=0;i<40;i++)
+                {
+                binomialCoefTable.Add(new List<int>());
+                for(int j=0;j<40;j++)
+                    {
+                    
+                    if(j==0 || j==i)
+                        {  
+                            binomialCoefTable[i].Add(0);   
+                        }
+                    else if(j==1 || j== i-1)
+                        {
+                            binomialCoefTable[i].Add(i);
+                        }
+                    else
+                        {
+                            binomialCoefTable[i].Add(-1);
+                        }
+
+                    }
+                }
+            
         }
+
+
+       public int binomialCoef(int x, int y)
+            {
+
+            if(x > y)  //Invalid binomial coef, return -1
+                {return -1;}
+
+              int max = Math.Max(x,y);
+          
+            else if(max > binomailCoefTable.Capacity)
+                {
+                int currCapacity = binomialCoefTable.Capacity;
+                
+                for(int i=currCapacity;i<max;i++)
+                    {
+
+                    if(i > currCapacity)   //Will need to fill in ALL of the vector--only fill it up to current capacity for now, though
+                        {
+
+                        binomialCoefTable.Add(new List<int>());
+
+
+                        for(int k=0;k<currCapacity;k++)
+                                {
+                                     if(k==0 || i==k)
+                                        {  
+                                            binomialCoefTable[i].Add(0);   
+                                        }
+                                    else if(k==1 || i== k-1)
+                                        {
+                                            binomialCoefTable[i].Add(i);
+                                        }
+                                    else
+                                        {
+                                            binomialCoefTable[i].Add(-1);
+                                        }
+
+
+                                }
+
+
+                        }
+                        
+                    for(int j=currCapacity;j<max;j++)
+                        {
+
+                        if(j>currCapacity)  
+                            {
+                            
+
+                            if(j==0 || j==i)
+                                {  
+                                binomialCoefTable[i].Add(0);   
+                                }
+                            else if(j==1 || j== i-1)
+                                {
+                                binomialCoefTable[i].Add(i);
+                                }
+                            else
+                                {
+                                binomialCoefTable[i].Add(-1);
+                                }
+                            
+
+                            }
+
+
+                        }
+
+
+
+                    }
+
+
+
+
+                }
+
+
+            if(binomialCoefTable[x][y] == -1)
+                {
+                 binomialCoefTable[x][y] = binomialCoef(x-1,y) + binomialCoef(x-1,y-1);
+                }
+            else
+                {
+                return binomialCoefTable[x][y];
+                }
+
+            }
+
+
+
 
         // Point class for general math use
         protected class Point2D : System.Object
@@ -80,6 +198,10 @@ namespace mat_290_framework
         List<float> knot_; // knot sequence for deboor
         bool EdPtCont_; // end point continuity flag for std knot seq contruction
         Random rnd_; // random number generator
+
+
+        List<List<int>> binomialCoefTable;
+
 
         // pickpt returns an index of the closest point to the passed in point
         //  -- usually a mouse position
