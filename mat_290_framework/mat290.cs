@@ -20,26 +20,26 @@ namespace mat_290_framework
             knot_ = new List<float>();
             EdPtCont_ = true;
             rnd_ = new Random();
-            binomialCoefTable = new List<List<int>>();
+            BinomialCoefTable = new List<List<int>>();
 
             //
             for(int i=0;i<40;i++)
                 {
-                binomialCoefTable.Add(new List<int>());
+                BinomialCoefTable.Add(new List<int>());
                 for(int j=0;j<40;j++)
                     {
                     
                     if(j==0 || j==i)
                         {  
-                            binomialCoefTable[i].Add(0);   
+                            BinomialCoefTable[i].Add(0);   
                         }
                     else if(j==1 || j== i-1)
                         {
-                            binomialCoefTable[i].Add(i);
+                            BinomialCoefTable[i].Add(i);
                         }
                     else
                         {
-                            binomialCoefTable[i].Add(-1);
+                            BinomialCoefTable[i].Add(-1);
                         }
 
                     }
@@ -48,17 +48,21 @@ namespace mat_290_framework
         }
 
 
-       public int binomialCoef(int x, int y)
+       public int BinomialCoef(int x, int y)
             {
+            int max = Math.Max(x, y);
 
-            if(x > y)  //Invalid binomial coef, return -1
-                {return -1;}
-
-              int max = Math.Max(x,y);
-          
-            else if(max > binomailCoefTable.Capacity)
+            if (x > y)  //Invalid binomial coef, return -1
                 {
-                int currCapacity = binomialCoefTable.Capacity;
+                return -1;
+                }
+
+
+              
+          
+            else if(max > BinomialCoefTable.Capacity)
+                {
+                int currCapacity = BinomialCoefTable.Capacity;
                 
                 for(int i=currCapacity;i<max;i++)
                     {
@@ -66,22 +70,22 @@ namespace mat_290_framework
                     if(i > currCapacity)   //Will need to fill in ALL of the vector--only fill it up to current capacity for now, though
                         {
 
-                        binomialCoefTable.Add(new List<int>());
+                        BinomialCoefTable.Add(new List<int>());
 
 
                         for(int k=0;k<currCapacity;k++)
                                 {
                                      if(k==0 || i==k)
                                         {  
-                                            binomialCoefTable[i].Add(0);   
+                                            BinomialCoefTable[i].Add(0);   
                                         }
                                     else if(k==1 || i== k-1)
                                         {
-                                            binomialCoefTable[i].Add(i);
+                                            BinomialCoefTable[i].Add(i);
                                         }
                                     else
                                         {
-                                            binomialCoefTable[i].Add(-1);
+                                            BinomialCoefTable[i].Add(-1);
                                         }
 
 
@@ -99,15 +103,15 @@ namespace mat_290_framework
 
                             if(j==0 || j==i)
                                 {  
-                                binomialCoefTable[i].Add(0);   
+                                BinomialCoefTable[i].Add(0);   
                                 }
                             else if(j==1 || j== i-1)
                                 {
-                                binomialCoefTable[i].Add(i);
+                                BinomialCoefTable[i].Add(i);
                                 }
                             else
                                 {
-                                binomialCoefTable[i].Add(-1);
+                                BinomialCoefTable[i].Add(-1);
                                 }
                             
 
@@ -126,15 +130,15 @@ namespace mat_290_framework
                 }
 
 
-            if(binomialCoefTable[x][y] == -1)
+            if(BinomialCoefTable[x][y] == -1)
                 {
-                 binomialCoefTable[x][y] = binomialCoef(x-1,y) + binomialCoef(x-1,y-1);
+                 BinomialCoefTable[x][y] = BinomialCoef(x-1,y) + BinomialCoef(x-1,y-1);
                 }
             else
                 {
-                return binomialCoefTable[x][y];
+                return BinomialCoefTable[x][y];
                 }
-
+            return -1;
             }
 
 
@@ -200,7 +204,7 @@ namespace mat_290_framework
         Random rnd_; // random number generator
 
 
-        List<List<int>> binomialCoefTable;
+        List<List<int>> BinomialCoefTable;
 
 
         // pickpt returns an index of the closest point to the passed in point
