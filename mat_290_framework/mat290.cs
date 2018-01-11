@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using MathNet.Numerics;
 
 namespace mat_290_framework
 {
@@ -144,6 +145,10 @@ namespace mat_290_framework
 
 
 
+
+       
+
+
         // Point class for general math use
         protected class Point2D : System.Object
         {
@@ -205,6 +210,8 @@ namespace mat_290_framework
 
 
         List<List<int>> BinomialCoefTable;
+
+        
 
 
         // pickpt returns an index of the closest point to the passed in point
@@ -598,12 +605,103 @@ namespace mat_290_framework
             // Drawing code for algorithms goes in here                                  //
             ///////////////////////////////////////////////////////////////////////////////
 
+            //Project # checked
+            if (Menu_Project1.Checked)
+            {
+
+                //Tweak these
+                //Start with degree # of points
+                //Initial degree:  1
+                //Initial coef vals (have d+1 coef):  all 1's
+                //Drag points up and down--coef corresponds to y val, do NOT change x val
+                //Curve should move along with the coef. on its own given the stuff below
+                //Up degree, change coef. / Bernstein poly all over again
+
+
+                // DeCastlejau algorithm
+                if (Menu_DeCast.Checked)
+                {
+                    Point2D current_left;
+                    Point2D current_right = new Point2D(DeCastlejau(0));
+
+                    for (float t = alpha; t < 1; t += alpha)
+                    {
+                        current_left = current_right;
+                        current_right = DeCastlejau(t);
+                        gfx.DrawLine(splinePen, current_left.P(), current_right.P());
+                    }
+
+                    gfx.DrawLine(splinePen, current_right.P(), DeCastlejau(1).P());
+                }
+
+                // Bernstein polynomial
+                if (Menu_Bern.Checked)
+                {
+                    Point2D current_left;
+                    Point2D current_right = new Point2D(Bernstein(0));
+
+                    for (float t = alpha; t < 1; t += alpha)
+                    {
+                        current_left = current_right;
+                        current_right = Bernstein(t);
+                        gfx.DrawLine(splinePen, current_left.P(), current_right.P());
+                    }
+
+                    gfx.DrawLine(splinePen, current_right.P(), Bernstein(1).P());
+                }
+
+
+
+
+
+
+            }
+
+            if (Menu_Project2.Checked)
+            {
+
+            }
+
+            if (Menu_Project3.Checked)
+            {
+
+            }
+
+            if (Menu_Project4.Checked)
+            {
+
+            }
+
+            if (Menu_Project5.Checked)
+            {
+
+            }
+
+            if (Menu_Project6.Checked)
+            {
+
+            }
+
+            if (Menu_Project7.Checked)
+            {
+
+            }
+
+            if (Menu_Project8.Checked)
+            {
+
+            }
+
+
+
+
             // DeCastlejau algorithm
             if (Menu_DeCast.Checked)
             {
                 Point2D current_left;
                 Point2D current_right = new Point2D(DeCastlejau(0));
 
+                //Loop to connect 'major' points w/ coef. attached
                 for (float t = alpha; t < 1; t += alpha)
                 {
                     current_left = current_right;
@@ -723,6 +821,10 @@ namespace mat_290_framework
 
         }
 
+        
+
+
+        //USE pts_ FOR THESE ALGS -- COEF!
         private Point2D Gamma(int start, int end, float t)
         {
             return new Point2D(0, 0);
@@ -735,8 +837,19 @@ namespace mat_290_framework
 
         private Point2D Bernstein(float t)
         {
+            // return new Point2D(0, 0);
+            return BernsteinCoef(1, t);
+        }
+
+
+        private Point2D BernsteinCoef(float c, float t)
+        {
             return new Point2D(0, 0);
         }
+
+
+        
+
 
         private const float MAX_DIST = 6.0F;
 
