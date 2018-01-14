@@ -956,8 +956,30 @@ namespace mat_290_framework
 
         private Point2D Bernstein(float t)
         {
-            // return new Point2D(0, 0);
-            return BernsteinCoef(1, t);
+
+            //For d = # of coef (degree +1)
+            // & Ai = coef. # i
+            //  Bernstein poly sum p(t) =   sum from i = 0 -> d
+            //  Ai * Bernstein poly(d, i, t)
+            //  Bernstein poly(d, i, t) =   (d Choose i) * (1-t) ^ (d-i)     *    t ^ i
+
+
+            // 
+
+            if(pts_.Count==1)
+            {
+                return pts_[0];
+            }
+
+            Point2D o = new Point2D(0, 0);
+            for(int i=0;i<pts_.Count;++i)
+            {
+                o += pts_[i] * BinomialCoef(degree_, i) * ((float)((Math.Pow((1 - t), degree_ - i) * Math.Pow(t, i))));
+            }
+            return o;
+
+            //return new Point2D(0, 0);
+            //return BernsteinCoef(1, t);
         }
 
 
