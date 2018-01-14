@@ -21,24 +21,29 @@ namespace mat_290_framework
             knot_ = new List<float>();
             EdPtCont_ = true;
             rnd_ = new Random();
+            polyDegree = 1;
        
             BinomialCoefTable = new List<List<int>>();
             updateP1DeCasteljauCoef = true;  //True if they DO need to be updated
-            P1DecastlejauCoef = new List<List<float>>();
+            P1DecastlejauCoef = new List<List<Point2D>>();
             //
             for(int i=0;i<40;i++)
                 {
                 BinomialCoefTable.Add(new List<int>());
-                P1DecastlejauCoef.Add(new List<float>());
+                P1DecastlejauCoef.Add(new List<Point2D>());
                 for(int j=0;j<40;j++)
                     {
-                    P1DecastlejauCoef[i].Add(INVALID_COEF);
+                    P1DecastlejauCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
                     
-                    if(j==0 || j==i)
+                    if(i==0 )
                         {  
                             BinomialCoefTable[i].Add(0);   
                         }
-                    else if(j==1 || j== i-1)
+                    else if( j == 0 || j == i)
+                    {
+                        BinomialCoefTable[i].Add(1);
+                    }
+                    else if (j==1 || j== i-1)
                         {
                             BinomialCoefTable[i].Add(i);
                         }
@@ -49,7 +54,12 @@ namespace mat_290_framework
 
                     }
                 }
-            
+
+
+
+
+            BinomialCoefTable[0][0] = 1;
+
         }
 
 
@@ -57,7 +67,12 @@ namespace mat_290_framework
             {
             int max = Math.Max(x, y);
 
-            if (x > y)  //Invalid binomial coef, return -1
+
+            if(x==0)
+            { return 1; }
+
+
+            if (y > x)  //Invalid binomial coef, return -1
                 {
                 return -1;
                 }
@@ -212,11 +227,13 @@ namespace mat_290_framework
         bool EdPtCont_; // end point continuity flag for std knot seq contruction
         Random rnd_; // random number generator
 
+
+
         //PROJECT 1
         List<List<int>> BinomialCoefTable;
         bool updateP1DeCasteljauCoef;  //True if they DO need to be updated
-        List<List<float>> P1DecastlejauCoef; 
-        
+        List<List<Point2D>> P1DecastlejauCoef;
+        int polyDegree;
 
 
         // pickpt returns an index of the closest point to the passed in point
@@ -683,6 +700,12 @@ namespace mat_290_framework
 
         private void DrawScreen(System.Drawing.Graphics gfx)
         {
+
+
+            PolynomialDegreeLabel.Visible = Menu_Project1.Checked;
+            PolynomialDegreeValue.Visible = Menu_Project1.Checked;
+
+
             // to prevent unecessary drawing
             if (pts_.Count == 0)
                 return;
@@ -838,13 +861,32 @@ namespace mat_290_framework
                 Point2D current_left;
                 Point2D current_right = new Point2D(Bernstein(0));
 
+
+
+
                 for (float t = alpha; t < 1; t += alpha)
                 {
                     current_left = current_right;
+
+
+                    if ((current_left.x < 30 && current_left.y < 30) || (current_right.x < 30 && current_right.y < 30))
+                    {
+                        int bob = 0;
+                        bob++;
+                    }
+
+
                     current_right = Bernstein(t);
+
+ 
+
+
                     gfx.DrawLine(splinePen, current_left.P(), current_right.P());
                 }
 
+
+                //Do NOT want Bernstein(1), as this will make the (1-t) term always 0--cancels everything else out!
+                //Instead, use something very close to 1
                 gfx.DrawLine(splinePen, current_right.P(), Bernstein(1).P());
             }
 
@@ -952,10 +994,21 @@ namespace mat_290_framework
 
         private Point2D DeCastlejau(float t)
         {
-            if(degree_ ==1)
+            if (pts_.Count == 1)
             {
                 return pts_[0];
             }
+
+            int pDTemp = pts_.Count;
+
+            if (Menu_Project1.Checked)
+            {
+                pDTemp = polyDegree;
+            }
+          
+
+
+
 
             Point2D o = new Point2D(0, 0);
 
@@ -970,29 +1023,37 @@ namespace mat_290_framework
                 {
                     for(int j=0;j<P1DecastlejauCoef[i].Count;j++)
                     {
-                        P1DecastlejauCoef[i][j] = INVALID_COEF;
+                        P1DecastlejauCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
                     }
                 }
 
                 //Set starting coef
                 for(int i=0;i<numCoef;++i)
                 {
-                    P1DecastlejauCoef[i][0] = pts_[i].y;
+                    P1DecastlejauCoef[0][i] = pts_[i];
                 }
 
                 //Re-calculate position based on cumulative sum -- double check this part, might have a < vs. <= error
-                for(int i=1;i<=numCoef ;i++)
+                for(int i=0;i<numCoef ;i++)
                 {
-                    for(int j=0;j<=numCoef;j++)
+                    for(int j=0;j<numCoef;j++)
                     {
-                        P1DecastlejauCoef[i][j] = P1DecastlejauCoef[i - 1][j] * (1 - t) + P1DecastlejauCoef[i - 1][j - 1] * t;
+                        P1DecastlejauCoef[i+1][j] = P1DecastlejauCoef[i][j] * (1 - t) + P1DecastlejauCoef[i][j +1] * t;
+
+
+                        if(i==pDTemp && j==0)
+                        {
+                            i = numCoef;
+                            j = numCoef;
+                        }
+
                     }
 
                 }
 
             }
 
-            return new Point2D(0, 0);
+            return P1DecastlejauCoef[pDTemp-1][0];
         }
 
         private Point2D Bernstein(float t)
@@ -1006,16 +1067,28 @@ namespace mat_290_framework
 
 
             // 
-
+            /*
             if(pts_.Count==1)
             {
                 return pts_[0];
             }
+            */
 
             Point2D o = new Point2D(0, 0);
-            for(int i=0;i<pts_.Count;++i)
+
+            int pDTemp = pts_.Count;
+
+            if(Menu_Project1.Checked)
             {
-                o += pts_[i] * BinomialCoef(degree_, i) * ((float)((Math.Pow((1 - t), degree_ - i) * Math.Pow(t, i))));
+                pDTemp = polyDegree;
+            }
+
+            for (int i=0;i<pDTemp;++i)
+            {
+               
+
+
+                o += pts_[i] * BinomialCoef(pDTemp-1, i) * ((float)((Math.Pow((1 - t), pDTemp -1 - i) * Math.Pow(t, i))));
             }
             return o;
 
@@ -1055,5 +1128,17 @@ namespace mat_290_framework
         {
             return new Point2D(0, 0);
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void PolyValueUpdated(object sender, EventArgs e)
+        {
+            polyDegree = (int)PolynomialDegreeValue.Value;
+        }
+
     }
 }

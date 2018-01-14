@@ -58,8 +58,11 @@ namespace mat_290_framework
             this.Lbl_knot = new System.Windows.Forms.Label();
             this.NUD_degree = new System.Windows.Forms.NumericUpDown();
             this.CB_cont = new System.Windows.Forms.CheckBox();
+            this.PolynomialDegreeValue = new System.Windows.Forms.NumericUpDown();
+            this.PolynomialDegreeLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_degree)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PolynomialDegreeValue)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -153,21 +156,21 @@ namespace mat_290_framework
             // Menu_DeCast
             // 
             this.Menu_DeCast.Name = "Menu_DeCast";
-            this.Menu_DeCast.Size = new System.Drawing.Size(152, 22);
+            this.Menu_DeCast.Size = new System.Drawing.Size(136, 22);
             this.Menu_DeCast.Text = "&DeCastlejau";
             this.Menu_DeCast.Click += new System.EventHandler(this.Menu_DeCast_Click);
             // 
             // Menu_Bern
             // 
             this.Menu_Bern.Name = "Menu_Bern";
-            this.Menu_Bern.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Bern.Size = new System.Drawing.Size(136, 22);
             this.Menu_Bern.Text = "&Bernstein";
             this.Menu_Bern.Click += new System.EventHandler(this.Menu_Bern_Click);
             // 
             // Menu_Midpoint
             // 
             this.Menu_Midpoint.Name = "Menu_Midpoint";
-            this.Menu_Midpoint.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Midpoint.Size = new System.Drawing.Size(136, 22);
             this.Menu_Midpoint.Text = "&Midpoint";
             this.Menu_Midpoint.Click += new System.EventHandler(this.Menu_Midpoint_Click);
             // 
@@ -177,7 +180,7 @@ namespace mat_290_framework
             this.Menu_Inter_Poly,
             this.Menu_Inter_Splines});
             this.Menu_Inter.Name = "Menu_Inter";
-            this.Menu_Inter.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Inter.Size = new System.Drawing.Size(136, 22);
             this.Menu_Inter.Text = "&Interpolate";
             // 
             // Menu_Inter_Poly
@@ -197,7 +200,7 @@ namespace mat_290_framework
             // Menu_DeBoor
             // 
             this.Menu_DeBoor.Name = "Menu_DeBoor";
-            this.Menu_DeBoor.Size = new System.Drawing.Size(152, 22);
+            this.Menu_DeBoor.Size = new System.Drawing.Size(136, 22);
             this.Menu_DeBoor.Text = "DeBoo&r";
             this.Menu_DeBoor.Click += new System.EventHandler(this.Menu_DeBoor_Click);
             // 
@@ -219,56 +222,56 @@ namespace mat_290_framework
             // Menu_Project1
             // 
             this.Menu_Project1.Name = "Menu_Project1";
-            this.Menu_Project1.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project1.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project1.Text = "Project 1";
             this.Menu_Project1.Click += new System.EventHandler(this.Menu_Project1_Click);
             // 
             // Menu_Project2
             // 
             this.Menu_Project2.Name = "Menu_Project2";
-            this.Menu_Project2.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project2.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project2.Text = "Project 2";
             this.Menu_Project2.Click += new System.EventHandler(this.Menu_Project2_Click);
             // 
             // Menu_Project3
             // 
             this.Menu_Project3.Name = "Menu_Project3";
-            this.Menu_Project3.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project3.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project3.Text = "Project 3";
             this.Menu_Project3.Click += new System.EventHandler(this.Menu_Project3_Click);
             // 
             // Menu_Project4
             // 
             this.Menu_Project4.Name = "Menu_Project4";
-            this.Menu_Project4.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project4.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project4.Text = "Project 4";
             this.Menu_Project4.Click += new System.EventHandler(this.Menu_Project4_Click);
             // 
             // Menu_Project5
             // 
             this.Menu_Project5.Name = "Menu_Project5";
-            this.Menu_Project5.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project5.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project5.Text = "Project 5";
             this.Menu_Project5.Click += new System.EventHandler(this.Menu_Project5_Click);
             // 
             // Menu_Project6
             // 
             this.Menu_Project6.Name = "Menu_Project6";
-            this.Menu_Project6.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project6.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project6.Text = "Project 6";
             this.Menu_Project6.Click += new System.EventHandler(this.Menu_Project6_Click);
             // 
             // Menu_Project7
             // 
             this.Menu_Project7.Name = "Menu_Project7";
-            this.Menu_Project7.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project7.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project7.Text = "Project 7";
             this.Menu_Project7.Click += new System.EventHandler(this.Menu_Project7_Click);
             // 
             // Menu_Project8
             // 
             this.Menu_Project8.Name = "Menu_Project8";
-            this.Menu_Project8.Size = new System.Drawing.Size(152, 22);
+            this.Menu_Project8.Size = new System.Drawing.Size(120, 22);
             this.Menu_Project8.Text = "Project 8";
             this.Menu_Project8.Click += new System.EventHandler(this.Menu_Project8_Click);
             // 
@@ -336,12 +339,49 @@ namespace mat_290_framework
             this.CB_cont.Visible = false;
             this.CB_cont.CheckedChanged += new System.EventHandler(this.CB_cont_CheckedChanged);
             // 
+            // PolynomialDegreeValue
+            // 
+            this.PolynomialDegreeValue.InterceptArrowKeys = false;
+            this.PolynomialDegreeValue.Location = new System.Drawing.Point(741, 467);
+            this.PolynomialDegreeValue.Maximum = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.PolynomialDegreeValue.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.PolynomialDegreeValue.Name = "PolynomialDegreeValue";
+            this.PolynomialDegreeValue.ReadOnly = true;
+            this.PolynomialDegreeValue.Size = new System.Drawing.Size(39, 20);
+            this.PolynomialDegreeValue.TabIndex = 8;
+            this.PolynomialDegreeValue.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.PolynomialDegreeValue.ValueChanged += new System.EventHandler(this.PolyValueUpdated);
+            // 
+            // PolynomialDegreeLabel
+            // 
+            this.PolynomialDegreeLabel.AutoSize = true;
+            this.PolynomialDegreeLabel.Location = new System.Drawing.Point(640, 469);
+            this.PolynomialDegreeLabel.Name = "PolynomialDegreeLabel";
+            this.PolynomialDegreeLabel.Size = new System.Drawing.Size(95, 13);
+            this.PolynomialDegreeLabel.TabIndex = 9;
+            this.PolynomialDegreeLabel.Text = "Polynomial Degree";
+            this.PolynomialDegreeLabel.Click += new System.EventHandler(this.label1_Click);
+            // 
             // MAT290
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(792, 573);
+            this.Controls.Add(this.PolynomialDegreeLabel);
+            this.Controls.Add(this.PolynomialDegreeValue);
             this.Controls.Add(this.CB_cont);
             this.Controls.Add(this.NUD_degree);
             this.Controls.Add(this.Lbl_knot);
@@ -358,6 +398,7 @@ namespace mat_290_framework
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_degree)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PolynomialDegreeValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -395,6 +436,8 @@ namespace mat_290_framework
         private System.Windows.Forms.ToolStripMenuItem Menu_Project6;
         private System.Windows.Forms.ToolStripMenuItem Menu_Project7;
         private System.Windows.Forms.ToolStripMenuItem Menu_Project8;
+        private System.Windows.Forms.NumericUpDown PolynomialDegreeValue;
+        private System.Windows.Forms.Label PolynomialDegreeLabel;
     }
 }
 
