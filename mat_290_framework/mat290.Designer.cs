@@ -153,21 +153,21 @@ namespace mat_290_framework
             // Menu_DeCast
             // 
             this.Menu_DeCast.Name = "Menu_DeCast";
-            this.Menu_DeCast.Size = new System.Drawing.Size(136, 22);
+            this.Menu_DeCast.Size = new System.Drawing.Size(152, 22);
             this.Menu_DeCast.Text = "&DeCastlejau";
             this.Menu_DeCast.Click += new System.EventHandler(this.Menu_DeCast_Click);
             // 
             // Menu_Bern
             // 
             this.Menu_Bern.Name = "Menu_Bern";
-            this.Menu_Bern.Size = new System.Drawing.Size(136, 22);
+            this.Menu_Bern.Size = new System.Drawing.Size(152, 22);
             this.Menu_Bern.Text = "&Bernstein";
             this.Menu_Bern.Click += new System.EventHandler(this.Menu_Bern_Click);
             // 
             // Menu_Midpoint
             // 
             this.Menu_Midpoint.Name = "Menu_Midpoint";
-            this.Menu_Midpoint.Size = new System.Drawing.Size(136, 22);
+            this.Menu_Midpoint.Size = new System.Drawing.Size(152, 22);
             this.Menu_Midpoint.Text = "&Midpoint";
             this.Menu_Midpoint.Click += new System.EventHandler(this.Menu_Midpoint_Click);
             // 
@@ -177,7 +177,7 @@ namespace mat_290_framework
             this.Menu_Inter_Poly,
             this.Menu_Inter_Splines});
             this.Menu_Inter.Name = "Menu_Inter";
-            this.Menu_Inter.Size = new System.Drawing.Size(136, 22);
+            this.Menu_Inter.Size = new System.Drawing.Size(152, 22);
             this.Menu_Inter.Text = "&Interpolate";
             // 
             // Menu_Inter_Poly
@@ -197,7 +197,7 @@ namespace mat_290_framework
             // Menu_DeBoor
             // 
             this.Menu_DeBoor.Name = "Menu_DeBoor";
-            this.Menu_DeBoor.Size = new System.Drawing.Size(136, 22);
+            this.Menu_DeBoor.Size = new System.Drawing.Size(152, 22);
             this.Menu_DeBoor.Text = "DeBoo&r";
             this.Menu_DeBoor.Click += new System.EventHandler(this.Menu_DeBoor_Click);
             // 
@@ -221,48 +221,56 @@ namespace mat_290_framework
             this.Menu_Project1.Name = "Menu_Project1";
             this.Menu_Project1.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project1.Text = "Project 1";
+            this.Menu_Project1.Click += new System.EventHandler(this.Menu_Project1_Click);
             // 
             // Menu_Project2
             // 
             this.Menu_Project2.Name = "Menu_Project2";
             this.Menu_Project2.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project2.Text = "Project 2";
+            this.Menu_Project2.Click += new System.EventHandler(this.Menu_Project2_Click);
             // 
             // Menu_Project3
             // 
             this.Menu_Project3.Name = "Menu_Project3";
             this.Menu_Project3.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project3.Text = "Project 3";
+            this.Menu_Project3.Click += new System.EventHandler(this.Menu_Project3_Click);
             // 
             // Menu_Project4
             // 
             this.Menu_Project4.Name = "Menu_Project4";
             this.Menu_Project4.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project4.Text = "Project 4";
+            this.Menu_Project4.Click += new System.EventHandler(this.Menu_Project4_Click);
             // 
             // Menu_Project5
             // 
             this.Menu_Project5.Name = "Menu_Project5";
             this.Menu_Project5.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project5.Text = "Project 5";
+            this.Menu_Project5.Click += new System.EventHandler(this.Menu_Project5_Click);
             // 
             // Menu_Project6
             // 
             this.Menu_Project6.Name = "Menu_Project6";
             this.Menu_Project6.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project6.Text = "Project 6";
+            this.Menu_Project6.Click += new System.EventHandler(this.Menu_Project6_Click);
             // 
             // Menu_Project7
             // 
             this.Menu_Project7.Name = "Menu_Project7";
             this.Menu_Project7.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project7.Text = "Project 7";
+            this.Menu_Project7.Click += new System.EventHandler(this.Menu_Project7_Click);
             // 
             // Menu_Project8
             // 
             this.Menu_Project8.Name = "Menu_Project8";
             this.Menu_Project8.Size = new System.Drawing.Size(152, 22);
             this.Menu_Project8.Text = "Project 8";
+            this.Menu_Project8.Click += new System.EventHandler(this.Menu_Project8_Click);
             // 
             // Txt_knot
             // 

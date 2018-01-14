@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using MathNet.Numerics;
-
 namespace mat_290_framework
 {
     public partial class MAT290 : Form
@@ -21,14 +20,18 @@ namespace mat_290_framework
             knot_ = new List<float>();
             EdPtCont_ = true;
             rnd_ = new Random();
+            const float INVALID_COEF = -999;
             BinomialCoefTable = new List<List<int>>();
-
+            updateP1DeCasteljauCoef = true;  //True if they DO need to be updated
+            P1DecastlejauCoef = new List<List<float>>();
             //
             for(int i=0;i<40;i++)
                 {
                 BinomialCoefTable.Add(new List<int>());
+                P1DecastlejauCoef.Add(new List<float>());
                 for(int j=0;j<40;j++)
                     {
+                    P1DecastlejauCoef[i].Add(INVALID_COEF);
                     
                     if(j==0 || j==i)
                         {  
@@ -208,9 +211,10 @@ namespace mat_290_framework
         bool EdPtCont_; // end point continuity flag for std knot seq contruction
         Random rnd_; // random number generator
 
-
+        //PROJECT 1
         List<List<int>> BinomialCoefTable;
-
+        bool updateP1DeCasteljauCoef;  //True if they DO need to be updated
+        List<List<float>> P1DecastlejauCoef; 
         
 
 
@@ -251,12 +255,26 @@ namespace mat_290_framework
             if (pts_.Count != 0 && e.Button == MouseButtons.Right)
             {
                 // grab the closest point and snap it to the mouse
-                int index = PickPt(new Point2D(e.X, e.Y));
+                if (Menu_Project1.Checked)
+                {
+                    int index = PickPt(new Point2D(e.X, e.Y));
+                    //Want x coord to be static & only move y coord
+                   // pts_[index].x = e.X;
+                    pts_[index].y = e.Y;
 
-                pts_[index].x = e.X;
-                pts_[index].y = e.Y;
+                    Refresh();
+                }
 
-                Refresh();
+                // grab the closest point and snap it to the mouse
+                else
+                {
+                    int index = PickPt(new Point2D(e.X, e.Y));
+
+                    pts_[index].x = e.X;
+                    pts_[index].y = e.Y;
+
+                    Refresh();
+                }
             }
         }
 
@@ -266,7 +284,10 @@ namespace mat_290_framework
             if (e.Button == MouseButtons.Left)
             {
                 // add a new point to the controlPoints
-                pts_.Add(new Point2D(e.X, e.Y));
+                if (!Menu_Project1.Checked)
+                {
+                    pts_.Add(new Point2D(e.X, e.Y));
+                }
 
                 if (Menu_DeBoor.Checked)
                 {
@@ -278,7 +299,7 @@ namespace mat_290_framework
             }
 
             // if there are points and the middle mouse button was pressed
-            if (pts_.Count != 0 && e.Button == MouseButtons.Middle)
+            if (pts_.Count != 0 && e.Button == MouseButtons.Middle && !Menu_Project1.Checked)
             {
                 // then delete the closest point
                 int index = PickPt(new Point2D(e.X, e.Y));
@@ -435,6 +456,104 @@ namespace mat_290_framework
 
             Refresh();
         }
+
+
+        private void Menu_Project1_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = !Menu_Project1.Checked;
+            Menu_Project2.Checked = false;
+            Menu_Project3.Checked = false;
+            Menu_Project4.Checked = false;
+            Menu_Project5.Checked = false;
+            Menu_Project6.Checked = false;
+            Menu_Project7.Checked = false;
+            Menu_Project8.Checked = false;
+        }
+
+        private void Menu_Project2_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = false;
+            Menu_Project2.Checked = !Menu_Project2.Checked;
+            Menu_Project3.Checked = false;
+            Menu_Project4.Checked = false;
+            Menu_Project5.Checked = false;
+            Menu_Project6.Checked = false;
+            Menu_Project7.Checked = false;
+            Menu_Project8.Checked = false;
+        }
+
+        private void Menu_Project3_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = false;
+            Menu_Project2.Checked = false;
+            Menu_Project3.Checked = !Menu_Project3.Checked;
+            Menu_Project4.Checked = false;
+            Menu_Project5.Checked = false;
+            Menu_Project6.Checked = false;
+            Menu_Project7.Checked = false;
+            Menu_Project8.Checked = false;
+        }
+
+        private void Menu_Project4_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = !Menu_Project1.Checked;
+            Menu_Project2.Checked = false;
+            Menu_Project3.Checked = false;
+            Menu_Project4.Checked = !Menu_Project4.Checked;
+            Menu_Project5.Checked = false;
+            Menu_Project6.Checked = false;
+            Menu_Project7.Checked = false;
+            Menu_Project8.Checked = false;
+        }
+
+        private void Menu_Project5_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = false;
+            Menu_Project2.Checked = false;
+            Menu_Project3.Checked = false;
+            Menu_Project4.Checked = false;
+            Menu_Project5.Checked = !Menu_Project5.Checked;
+            Menu_Project6.Checked = false;
+            Menu_Project7.Checked = false;
+            Menu_Project8.Checked = false;
+        }
+
+        private void Menu_Project6_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = false;
+            Menu_Project2.Checked = false;
+            Menu_Project3.Checked = false;
+            Menu_Project4.Checked = false;
+            Menu_Project5.Checked = false;
+            Menu_Project6.Checked = !Menu_Project6.Checked;
+            Menu_Project7.Checked = false;
+            Menu_Project8.Checked = false;
+        }
+
+        private void Menu_Project7_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = false;
+            Menu_Project2.Checked = false;
+            Menu_Project3.Checked = false;
+            Menu_Project4.Checked = false;
+            Menu_Project5.Checked = false;
+            Menu_Project6.Checked = false;
+            Menu_Project7.Checked = !Menu_Project7.Checked;
+            Menu_Project8.Checked = false;
+        }
+
+        private void Menu_Project8_Click(object sender, EventArgs e)
+        {
+            Menu_Project1.Checked = false;
+            Menu_Project2.Checked = false;
+            Menu_Project3.Checked = false;
+            Menu_Project4.Checked = false;
+            Menu_Project5.Checked = false;
+            Menu_Project6.Checked = false;
+            Menu_Project7.Checked = false;
+            Menu_Project8.Checked = !Menu_Project8.Checked;
+        }
+
 
         private void Menu_Inter_Poly_Click(object sender, EventArgs e)
         {
