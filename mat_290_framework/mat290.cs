@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using MathNet.Numerics;
 namespace mat_290_framework
 {
+
     public partial class MAT290 : Form
     {
         public MAT290()
@@ -20,7 +21,7 @@ namespace mat_290_framework
             knot_ = new List<float>();
             EdPtCont_ = true;
             rnd_ = new Random();
-            const float INVALID_COEF = -999;
+       
             BinomialCoefTable = new List<List<int>>();
             updateP1DeCasteljauCoef = true;  //True if they DO need to be updated
             P1DecastlejauCoef = new List<List<float>>();
@@ -951,6 +952,46 @@ namespace mat_290_framework
 
         private Point2D DeCastlejau(float t)
         {
+            if(degree_ ==1)
+            {
+                return pts_[0];
+            }
+
+            Point2D o = new Point2D(0, 0);
+
+            if(updateP1DeCasteljauCoef)
+            {
+                int numCoef = pts_.Count;
+
+
+
+                //Reset coef.
+                for(int i=0;i<P1DecastlejauCoef.Count;i++)
+                {
+                    for(int j=0;j<P1DecastlejauCoef[i].Count;j++)
+                    {
+                        P1DecastlejauCoef[i][j] = INVALID_COEF;
+                    }
+                }
+
+                //Set starting coef
+                for(int i=0;i<numCoef;++i)
+                {
+                    P1DecastlejauCoef[i][0] = pts_[i].y;
+                }
+
+                //Re-calculate position based on cumulative sum -- double check this part, might have a < vs. <= error
+                for(int i=1;i<=numCoef ;i++)
+                {
+                    for(int j=0;j<=numCoef;j++)
+                    {
+                        P1DecastlejauCoef[i][j] = P1DecastlejauCoef[i - 1][j] * (1 - t) + P1DecastlejauCoef[i - 1][j - 1] * t;
+                    }
+
+                }
+
+            }
+
             return new Point2D(0, 0);
         }
 
@@ -993,6 +1034,7 @@ namespace mat_290_framework
 
 
         private const float MAX_DIST = 6.0F;
+        private float INVALID_COEF = -999;
 
         private void DrawMidpoint(System.Drawing.Graphics gfx, System.Drawing.Pen pen, List<Point2D> cPs)
         {
