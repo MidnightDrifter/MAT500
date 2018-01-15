@@ -869,11 +869,7 @@ namespace mat_290_framework
                     current_left = current_right;
 
 
-                    if ((current_left.x < 30 && current_left.y < 30) || (current_right.x < 30 && current_right.y < 30))
-                    {
-                        int bob = 0;
-                        bob++;
-                    }
+                 
 
 
                     current_right = Bernstein(t);
