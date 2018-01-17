@@ -712,7 +712,7 @@ namespace mat_290_framework
 
             // pens used for drawing elements of the display
             System.Drawing.Pen polyPen = new Pen(Color.Gray, 1.0f);
-            System.Drawing.Pen shellPen = new Pen(Color.LightGray, 0.5f);
+            System.Drawing.Pen shellPen = new Pen(Color.Blue, 0.5f);
             System.Drawing.Pen splinePen = new Pen(Color.Red, 1.5f);
 
             if (Menu_Shell.Checked)
