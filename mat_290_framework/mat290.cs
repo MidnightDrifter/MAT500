@@ -49,7 +49,7 @@ namespace mat_290_framework
                         }
                     else
                         {
-                            BinomialCoefTable[i].Add(-1);
+                            BinomialCoefTable[i].Add(-5);
                         }
 
                     }
@@ -80,85 +80,18 @@ namespace mat_290_framework
 
               
           
-            else if(max > BinomialCoefTable.Capacity)
-                {
-                int currCapacity = BinomialCoefTable.Capacity;
-                
-                for(int i=currCapacity;i<max;i++)
-                    {
+    
 
-                    if(i > currCapacity)   //Will need to fill in ALL of the vector--only fill it up to current capacity for now, though
-                        {
-
-                        BinomialCoefTable.Add(new List<int>());
-
-
-                        for(int k=0;k<currCapacity;k++)
-                                {
-                                     if(k==0 || i==k)
-                                        {  
-                                            BinomialCoefTable[i].Add(0);   
-                                        }
-                                    else if(k==1 || i== k-1)
-                                        {
-                                            BinomialCoefTable[i].Add(i);
-                                        }
-                                    else
-                                        {
-                                            BinomialCoefTable[i].Add(-1);
-                                        }
-
-
-                                }
-
-
-                        }
-                        
-                    for(int j=currCapacity;j<max;j++)
-                        {
-
-                        if(j>currCapacity)  
-                            {
-                            
-
-                            if(j==0 || j==i)
-                                {  
-                                BinomialCoefTable[i].Add(0);   
-                                }
-                            else if(j==1 || j== i-1)
-                                {
-                                BinomialCoefTable[i].Add(i);
-                                }
-                            else
-                                {
-                                BinomialCoefTable[i].Add(-1);
-                                }
-                            
-
-                            }
-
-
-                        }
-
-
-
-                    }
-
-
-
-
-                }
-
-
-            if(BinomialCoefTable[x][y] == -1)
+            if(BinomialCoefTable[x][y] <=0)
                 {
                  BinomialCoefTable[x][y] = BinomialCoef(x-1,y) + BinomialCoef(x-1,y-1);
+                return BinomialCoefTable[x][y];
                 }
             else
                 {
                 return BinomialCoefTable[x][y];
                 }
-            return -1;
+           // return -1;
             }
 
 
@@ -712,8 +645,8 @@ namespace mat_290_framework
 
             // pens used for drawing elements of the display
             System.Drawing.Pen polyPen = new Pen(Color.Gray, 1.0f);
-            System.Drawing.Pen shellPen = new Pen(Color.LightGray, 0.5f);
-            System.Drawing.Pen splinePen = new Pen(Color.Black, 1.5f);
+            System.Drawing.Pen shellPen = new Pen(Color.Blue, 0.5f);
+            System.Drawing.Pen splinePen = new Pen(Color.Red, 1.5f);
 
             if (Menu_Shell.Checked)
             {
@@ -869,11 +802,7 @@ namespace mat_290_framework
                     current_left = current_right;
 
 
-                    if ((current_left.x < 30 && current_left.y < 30) || (current_right.x < 30 && current_right.y < 30))
-                    {
-                        int bob = 0;
-                        bob++;
-                    }
+                 
 
 
                     current_right = Bernstein(t);
@@ -1035,49 +964,92 @@ namespace mat_290_framework
 
 
             Point2D o = new Point2D(0, 0);
-
+            UpdateDeCasteljau(t);
             if(updateP1DeCasteljauCoef)
             {
-                int numCoef = pts_.Count;
+                //int numCoef = pts_.Count;
 
 
 
-                //Reset coef.
-                for(int i=0;i<P1DecastlejauCoef.Count;i++)
+                ////Reset coef.
+                //for(int i=0;i<P1DecastlejauCoef.Count;i++)
+                //{
+                //    for(int j=0;j<P1DecastlejauCoef[i].Count;j++)
+                //    {
+                //        P1DecastlejauCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
+                //    }
+                //}
+
+                ////Set starting coef
+                //for(int i=0;i<numCoef;++i)
+                //{
+                //    P1DecastlejauCoef[0][i] = pts_[i];
+                //}
+
+                ////Re-calculate position based on cumulative sum -- double check this part, might have a < vs. <= error
+                //for(int i=0;i<numCoef ;i++)
+                //{
+                //    for(int j=0;j<numCoef;j++)
+                //    {
+                //        P1DecastlejauCoef[i+1][j] = P1DecastlejauCoef[i][j] * (1 - t) + P1DecastlejauCoef[i][j +1] * t;
+
+
+                //        if(i==pDTemp && j==0)
+                //        {
+                //            i = numCoef;
+                //            j = numCoef;
+                //        }
+
+                //    }
+
+                //}
+
+            }
+
+            return P1DecastlejauCoef[pDTemp-1][0];
+        }
+
+
+        private void UpdateDeCasteljau(float t)
+        {
+            int pDTemp = pts_.Count;
+            int numCoef = pts_.Count;
+
+
+
+            //Reset coef.
+            for (int i = 0; i < P1DecastlejauCoef.Count; i++)
+            {
+                for (int j = 0; j < P1DecastlejauCoef[i].Count; j++)
                 {
-                    for(int j=0;j<P1DecastlejauCoef[i].Count;j++)
-                    {
-                        P1DecastlejauCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
-                    }
+                    P1DecastlejauCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
                 }
+            }
 
-                //Set starting coef
-                for(int i=0;i<numCoef;++i)
-                {
-                    P1DecastlejauCoef[0][i] = pts_[i];
-                }
+            //Set starting coef
+            for (int i = 0; i < numCoef; ++i)
+            {
+                P1DecastlejauCoef[0][i] = pts_[i];
+            }
 
-                //Re-calculate position based on cumulative sum -- double check this part, might have a < vs. <= error
-                for(int i=0;i<numCoef ;i++)
+            //Re-calculate position based on cumulative sum -- double check this part, might have a < vs. <= error
+            for (int i = 0; i < numCoef; i++)
+            {
+                for (int j = 0; j < numCoef; j++)
                 {
-                    for(int j=0;j<numCoef;j++)
+                    P1DecastlejauCoef[i + 1][j] = P1DecastlejauCoef[i][j] * (1 - t) + P1DecastlejauCoef[i][j + 1] * t;
+
+
+                    if (i == pDTemp && j == 0)
                     {
-                        P1DecastlejauCoef[i+1][j] = P1DecastlejauCoef[i][j] * (1 - t) + P1DecastlejauCoef[i][j +1] * t;
-
-
-                        if(i==pDTemp && j==0)
-                        {
-                            i = numCoef;
-                            j = numCoef;
-                        }
-
+                        i = numCoef;
+                        j = numCoef;
                     }
 
                 }
 
             }
 
-            return P1DecastlejauCoef[pDTemp-1][0];
         }
 
         private Point2D Bernstein(float t)
