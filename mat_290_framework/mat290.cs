@@ -980,6 +980,30 @@ namespace mat_290_framework
 
         private void DrawShell(System.Drawing.Graphics gfx, System.Drawing.Pen pen, List<Point2D> pts, float t)
         {
+            if (pts.Count > 1)
+            {
+                
+                List<Point2D> drawPoints = new List<Point2D>();
+                for (int i = 0; i < pts.Count; i++)
+                {
+                    drawPoints.Add(P1DecastlejauCoef[i][0]);
+                }
+
+                for (int offset = 1; offset < pts.Count; offset++)
+                {
+                    drawPoints.Add(P1DecastlejauCoef[pts.Count - offset][offset]);
+                }
+
+
+                for (int i = 0; i < pts.Count - 1; i++)
+                {
+                    gfx.DrawLine(pen, drawPoints[i].P(), drawPoints[i + 1].P());
+                }
+
+
+            }
+
+           
 
         }
 
