@@ -909,27 +909,14 @@ namespace mat_290_framework
 
         private void DrawShell(System.Drawing.Graphics gfx, System.Drawing.Pen pen, List<Point2D> pts, float t)
         {
-            if (pts.Count > 1)
+            UpdateDeCasteljau(t);
+
+           for(int i=1;i<pts.Count-1;i++)
             {
-                
-                List<Point2D> drawPoints = new List<Point2D>();
-                for (int i = 0; i < pts.Count; i++)
+                for(int j=0;(i+j)<pts.Count-1; j++)
                 {
-                    drawPoints.Add(P1DecastlejauCoef[i][0]);
+                    gfx.DrawLine(pen, P1DecastlejauCoef[i][j].P(), P1DecastlejauCoef[i][j + 1].P());
                 }
-
-                for (int offset = 1; offset < pts.Count; offset++)
-                {
-                    drawPoints.Add(P1DecastlejauCoef[pts.Count - offset][offset]);
-                }
-
-
-                for (int i = 0; i < pts.Count - 1; i++)
-                {
-                    gfx.DrawLine(pen, drawPoints[i].P(), drawPoints[i + 1].P());
-                }
-
-
             }
 
            
@@ -1107,8 +1094,41 @@ namespace mat_290_framework
 
         private void DrawMidpoint(System.Drawing.Graphics gfx, System.Drawing.Pen pen, List<Point2D> cPs)
         {
+            if (cPs.Count > 1)
+            {
+                UpdateDeCasteljau(tVal_);
+                List<Point2D> pointHolder = new List<Point2D>();
+                List<Point2D> drawPoints = new List<Point2D>();
+                for (int i = 0; i < cPs.Count; i++)
+                {
+                    drawPoints.Add(P1DecastlejauCoef[i][0]);
+                }
 
+                for (int offset = 1; offset < cPs.Count; offset++)
+                {
+                    drawPoints.Add(P1DecastlejauCoef[cPs.Count - offset][offset]);
+                }
+
+
+                for (int i = 0; i < cPs.Count - 1; i++)
+                {
+                    gfx.DrawLine(pen, drawPoints[i].P(), drawPoints[i + 1].P());
+                }
+
+
+            }
         }
+
+        private List<Point2D> MidpointHelper(List<Point2D> inputPoints)
+        {
+            List<Point2D> outPoints = new List<Point2D>();
+
+
+
+            return outPoints;
+        }
+
+
 
         private Point2D PolyInterpolate(float t)
         {
