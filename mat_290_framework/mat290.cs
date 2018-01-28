@@ -26,11 +26,13 @@ namespace mat_290_framework
             BinomialCoefTable = new List<List<int>>();
             updateP1DeCasteljauCoef = true;  //True if they DO need to be updated
             P1DecastlejauCoef = new List<List<Point2D>>();
+            P2MidpointCoef = new List<List<Point2D>>();
             //
             for(int i=0;i<40;i++)
                 {
                 BinomialCoefTable.Add(new List<int>());
                 P1DecastlejauCoef.Add(new List<Point2D>());
+                P2MidpointCoef.Add(new List<Point2D>());
                 for(int j=0;j<40;j++)
                     {
                     P1DecastlejauCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
@@ -165,7 +167,7 @@ namespace mat_290_framework
         //PROJECT 1
         List<List<int>> BinomialCoefTable;
         bool updateP1DeCasteljauCoef;  //True if they DO need to be updated
-        List<List<Point2D>> P1DecastlejauCoef;
+        List<List<Point2D>> P1DecastlejauCoef, P2MidpointCoef;
         int polyDegree;
 
 
@@ -1039,6 +1041,49 @@ namespace mat_290_framework
 
         }
 
+
+        private void UpdateMidpoints()
+        {
+            int pDTemp = pts_.Count;
+            int numCoef = pts_.Count;
+
+
+
+            //Reset coef.
+            for (int i = 0; i < P2MidpointCoef.Count; i++)
+            {
+                for (int j = 0; j < P2MidpointCoef[i].Count; j++)
+                {
+                    P2MidpointCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
+                }
+            }
+
+            //Set starting coef
+            for (int i = 0; i < numCoef; ++i)
+            {
+                P2MidpointCoef[0][i] = pts_[i];
+            }
+
+            //Re-calculate position based on cumulative sum -- double check this part, might have a < vs. <= error
+            for (int i = 0; i < numCoef; i++)
+            {
+                for (int j = 0; j < numCoef; j++)
+                {
+                    P2MidpointCoef[i + 1][j] = P2MidpointCoef[i][j] * (0.5f) + P2MidpointCoef[i][j + 1] * 0.5f;
+
+
+                    if (i == pDTemp && j == 0)
+                    {
+                        i = numCoef;
+                        j = numCoef;
+                    }
+
+                }
+
+            }
+
+        }
+
         private Point2D Bernstein(float t)
         {
 
@@ -1094,9 +1139,11 @@ namespace mat_290_framework
 
         private void DrawMidpoint(System.Drawing.Graphics gfx, System.Drawing.Pen pen, List<Point2D> cPs)
         {
+            UpdateMidpoints();
             if (cPs.Count > 1)
             {
-                UpdateDeCasteljau(tVal_);
+                UpdateMidpoints();
+                
                 List<Point2D> pointHolder = new List<Point2D>();
                 List<Point2D> drawPoints = new List<Point2D>();
                 for (int i = 0; i < cPs.Count; i++)
