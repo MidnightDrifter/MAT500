@@ -36,7 +36,7 @@ namespace mat_290_framework
                 for(int j=0;j<40;j++)
                     {
                     P1DecastlejauCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
-                    
+                    P2MidpointCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
                     if(i==0 )
                         {  
                             BinomialCoefTable[i].Add(0);   
@@ -1024,7 +1024,7 @@ namespace mat_290_framework
             //Re-calculate position based on cumulative sum -- double check this part, might have a < vs. <= error
             for (int i = 0; i < numCoef; i++)
             {
-                for (int j = 0; j < numCoef; j++)
+                for (int j = 0; j < numCoef-i; j++)
                 {
                     P1DecastlejauCoef[i + 1][j] = P1DecastlejauCoef[i][j] * (1 - t) + P1DecastlejauCoef[i][j + 1] * t;
 
@@ -1042,7 +1042,7 @@ namespace mat_290_framework
         }
 
 
-        private void UpdateMidpoints()
+        private void InitializeMidpoints()
         {
             int pDTemp = pts_.Count;
             int numCoef = pts_.Count;
@@ -1059,7 +1059,7 @@ namespace mat_290_framework
             }
 
             //Set starting coef
-            for (int i = 0; i < numCoef; ++i)
+            for (int i = 0; i < numCoef; i++)
             {
                 P2MidpointCoef[0][i] = pts_[i];
             }
@@ -1130,7 +1130,17 @@ namespace mat_290_framework
             return new Point2D(0, 0);
         }
 
-
+        private void ClearMidpoints()
+        {
+            for(int i=0;i<P2MidpointCoef.Count;i++)
+            {
+                for(int j=0;j<P2MidpointCoef[i].Count;j++)
+                {
+                    P2MidpointCoef[i][j].x = INVALID_COEF;
+                    P2MidpointCoef[i][j].y = INVALID_COEF;
+                }
+            }
+        }
         
 
 
@@ -1139,13 +1149,17 @@ namespace mat_290_framework
 
         private void DrawMidpoint(System.Drawing.Graphics gfx, System.Drawing.Pen pen, List<Point2D> cPs)
         {
-            UpdateMidpoints();
+
+
+        
             if (cPs.Count > 1)
             {
-                UpdateMidpoints();
-                
+                // UpdateMidpoints();
+                InitializeMidpoints();
                 List<Point2D> pointHolder = new List<Point2D>();
-                List<Point2D> drawPoints = new List<Point2D>();
+                // List<Point2D> drawPoints = new List<Point2D>();
+
+                /*
                 for (int i = 0; i < cPs.Count; i++)
                 {
                     drawPoints.Add(P1DecastlejauCoef[i][0]);
@@ -1161,6 +1175,42 @@ namespace mat_290_framework
                 {
                     gfx.DrawLine(pen, drawPoints[i].P(), drawPoints[i + 1].P());
                 }
+                */
+
+                /*
+                for (int a = 0; a < cPs.Count; a++)
+                {
+
+                    if (!(P2MidpointCoef[a][0].x < 0 || P2MidpointCoef[a][0].y < 0))
+                    {
+                        pointHolder.Add(P2MidpointCoef[a][0]);
+                    }
+                }
+
+                for (int offset = 1; offset < cPs.Count; offset++)   //Might be range-1 for these, double check
+                {
+                    if (!(P2MidpointCoef[cPs.Count - offset][offset].x < 0 || P2MidpointCoef[cPs.Count - offset][offset].y < 0))
+                    {
+                        pointHolder.Add(P2MidpointCoef[cPs.Count - offset][offset]);
+                    }
+                }
+                */
+
+                pointHolder = MidpointHelper(cPs);
+
+
+                for(int i=0;i<4;i++)
+                {
+                    pointHolder = MidpointHelper(pointHolder);
+                }
+
+
+
+                for(int x=0;x<pointHolder.Count-1;x++)
+                {
+                    //if (pointHolder[x].x >0 && pointHolder[x].y >0 && pointHolder[x + 1].x > 0 && pointHolder[x + 1].y > 0)
+                    { gfx.DrawLine(pen, pointHolder[x].P(), pointHolder[x + 1].P()); }
+                }
 
 
             }
@@ -1169,6 +1219,81 @@ namespace mat_290_framework
         private List<Point2D> MidpointHelper(List<Point2D> inputPoints)
         {
             List<Point2D> outPoints = new List<Point2D>();
+
+
+
+
+          //  ClearMidpoints();
+        
+                // List<List<Point2D>> myCoef = new List<List<Point2D>>();
+
+
+
+
+                List<List<Point2D>> tempTable = new List<List<Point2D>>();
+
+                for (int q = 0; q < inputPoints.Count+1; q++)
+                {
+                    tempTable.Add(new List<Point2D>());
+                    for (int r = 0; r < inputPoints.Count + 1; r++)
+                    {
+
+                        tempTable[q].Add(new Point2D(INVALID_COEF, INVALID_COEF));
+                    }
+
+
+                }
+
+
+
+
+
+
+           
+
+                for (int j=0;j<inputPoints.Count ;j++)
+                {
+                    // myCoef
+                   tempTable[0][j] = inputPoints[j];
+
+
+
+                }
+
+
+
+                for (int x = 0; x < inputPoints.Count; x++)
+                {
+                    for (int y = 0; y < inputPoints.Count; y++)
+                    {
+
+                    if (!(tempTable[x][y].x == INVALID_COEF || tempTable[x][y].y == INVALID_COEF || tempTable[x][y + 1].x == INVALID_COEF || tempTable[x][y + 1].y == INVALID_COEF))
+                    {
+                        tempTable[x + 1][y] = tempTable[x][y] * 0.5f + tempTable[x][y + 1] * 0.5f;
+                    }
+
+
+                  
+
+                    }
+
+                }
+
+
+
+                for(int a=0;a< inputPoints.Count; a++)
+                {
+                    outPoints.Add(tempTable[a][0]);
+                }
+
+                for(int offset =1;  offset< inputPoints.Count;  offset++)   //Might be range-1 for these, double check
+                {
+                    outPoints.Add(tempTable[inputPoints.Count - offset-1][offset]);
+                }
+
+            //   ClearMidpoints();
+
+            
 
 
 
