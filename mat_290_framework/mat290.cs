@@ -25,19 +25,25 @@ namespace mat_290_framework
        
             BinomialCoefTable = new List<List<int>>();
             updateP1DeCasteljauCoef = true;  //True if they DO need to be updated
+
             P1DecastlejauCoef = new List<List<Point2D>>();
             P2MidpointCoef = new List<List<Point2D>>();
+            P3PolyCoef = new List<List<Point2D>>();
+            P3Factorials = new List<int>();
             //
             for(int i=0;i<40;i++)
                 {
                 BinomialCoefTable.Add(new List<int>());
                 P1DecastlejauCoef.Add(new List<Point2D>());
                 P2MidpointCoef.Add(new List<Point2D>());
+                P3PolyCoef.Add(new List<Point2D>());
                 for(int j=0;j<40;j++)
                     {
                     P1DecastlejauCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
                     P2MidpointCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
-                    if(i==0 )
+                    P3PolyCoef[i].Add(new Point2D(INVALID_COEF, INVALID_COEF));
+                    P3Factorials.Add((int)INVALID_COEF);
+                    if (i==0 )
                         {  
                             BinomialCoefTable[i].Add(0);   
                         }
@@ -167,12 +173,62 @@ namespace mat_290_framework
         //PROJECT 1
         List<List<int>> BinomialCoefTable;
         bool updateP1DeCasteljauCoef;  //True if they DO need to be updated
-        List<List<Point2D>> P1DecastlejauCoef, P2MidpointCoef;
+        List<int> P3Factorials;
+        List<List<Point2D>> P1DecastlejauCoef, P2MidpointCoef, P3PolyCoef;
         int polyDegree;
-
+        
 
         // pickpt returns an index of the closest point to the passed in point
         //  -- usually a mouse position
+
+
+            private int Factorial(int i)
+        {
+            if(i<=1)
+            {
+                P3Factorials[0] = 1;
+                P3Factorials[1] = 1;
+                return 1;
+            }
+
+            else
+            {
+                if(P3Factorials[i] == (int)INVALID_COEF)
+                {
+                    P3Factorials[i] = i * Factorial(i - 1);
+                }
+
+
+                return P3Factorials[i];
+
+            }
+        }
+
+        private int PartialFactorial(int start, int end)
+        {
+            if(start <=1)
+            {
+                return 1;
+            }
+
+            else if(end <=1)
+            {
+                return Factorial(start);
+            }
+
+
+            else if(start==end)
+            {
+                return start;
+            }
+
+            else
+            {
+                return Factorial(start) / Factorial(end);
+            }
+        }
+
+
         private int PickPt(Point2D m)
         {
             float closest = m % pts_[0];
@@ -1304,7 +1360,67 @@ namespace mat_290_framework
 
         private Point2D PolyInterpolate(float t)
         {
-            return new Point2D(0, 0);
+            //return new Point2D(0, 0);
+
+            if(pts_.Count <2)
+            {
+                return pts_[0];
+            }
+
+            else
+            {
+                Point2D outPoint = DivDiffCoef(t,0,0);
+
+                for(int i=1;i<pts_.Count;i++)
+                {
+                    outPoint += DivDiffCoef(t, 0, i) * PartialFactorial(pts_.Count, pts_.Count - i);
+                }
+
+                return outPoint;
+
+            }
+
+
+        }
+
+
+        private Point2D DivDiffCoef(float t, int startIndex, int endIndex)
+        {
+            if (P3PolyCoef[startIndex][endIndex].x != INVALID_COEF && P3PolyCoef[startIndex][endIndex].y != INVALID_COEF)
+            {
+                return P3PolyCoef[startIndex][endIndex];
+            }
+
+            else {
+                if (startIndex == endIndex)
+                {
+                    P3PolyCoef[startIndex][endIndex] = pts_[startIndex];
+                    return pts_[startIndex];
+                }
+
+                else
+                {
+                    //Point2D outPoint = new Point2D(0, 0);
+
+
+
+                    // return ( new Point2D(DivDiffCoef(t, startIndex + 1, endIndex).x - DivDiffCoef(t, startIndex, endIndex - 1).x, DivDiffCoef(t, startIndex + 1, endIndex).y - DivDiffCoef(t, startIndex, endIndex - 1).y) / (endIndex - startIndex);
+
+
+                    P3PolyCoef[startIndex][endIndex].x = (DivDiffCoef(t, startIndex + 1, endIndex).x - DivDiffCoef(t, startIndex, endIndex - 1).x) / (endIndex - startIndex);
+                    P3PolyCoef[startIndex][endIndex].y = (DivDiffCoef(t, startIndex + 1, endIndex).y - DivDiffCoef(t, startIndex, endIndex - 1).y) / (endIndex - startIndex);
+
+
+
+                    return P3PolyCoef[startIndex][endIndex];
+
+
+                    //return outPoint;
+
+
+                }
+            }
+
         }
 
         private Point2D SplineInterpolate(float t)
