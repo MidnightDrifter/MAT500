@@ -187,7 +187,7 @@ namespace mat_290_framework
                     closestIndex = i;
                 }
             }
-
+            Refresh();
             return closestIndex;
         }
 
