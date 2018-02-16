@@ -889,14 +889,14 @@ namespace mat_290_framework
                 Point2D current_left;
                 Point2D current_right = new Point2D(PolyInterpolate(0));
 
-                for (float t = alpha; t < 1; t += alpha)
+                for (float t = alpha; t <pts_.Count; t+=alpha)
                 {
                     current_left = current_right;
                     current_right = PolyInterpolate(t);
                     gfx.DrawLine(splinePen, current_left.P(), current_right.P());
                 }
 
-                gfx.DrawLine(splinePen, current_right.P(), PolyInterpolate(1).P());
+                gfx.DrawLine(splinePen, current_right.P(), PolyInterpolate(pts_.Count).P());
             }
 
             // spline interpolation
@@ -1192,8 +1192,7 @@ namespace mat_290_framework
             {
                 for(int j=0;j<P2MidpointCoef[i].Count;j++)
                 {
-                    P2MidpointCoef[i][j].x = INVALID_COEF;
-                    P2MidpointCoef[i][j].y = INVALID_COEF;
+                    P2MidpointCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
                 }
             }
         }
@@ -1395,11 +1394,14 @@ namespace mat_290_framework
 
             else
             {
+
+                DivDiffCoef(t, 0, pts_.Count-1);
+
                 Point2D outPoint = DivDiffCoef(t,0,0);
-                List<float> tVals = TMinusVals(t, pts_.Count);
+                List<float> myTVals = TMinusVals(t, pts_.Count);
                 for(int i=1;i<pts_.Count;i++)
                 {
-                    outPoint += DivDiffCoef(t, 0, i) *tVals[i];
+                    outPoint += DivDiffCoef(t, 0, i) *myTVals[i-1];
                 }
 
                 return outPoint;
@@ -1415,8 +1417,9 @@ namespace mat_290_framework
             {
                 for(int j=0;j<P3PolyCoef[i].Count;j++)
                 {
-                    P3PolyCoef[i][j].x = INVALID_COEF;
-                    P3PolyCoef[i][j].y = INVALID_COEF;
+                    //P3PolyCoef[i][j].x = INVALID_COEF;
+                    //P3PolyCoef[i][j].y = INVALID_COEF;
+                    P3PolyCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
                 }
             }
         }
@@ -1431,8 +1434,8 @@ namespace mat_290_framework
             else {
                 if (startIndex == endIndex)
                 {
-                    P3PolyCoef[startIndex][0] = pts_[startIndex];
-                    return pts_[startIndex];
+                    P3PolyCoef[startIndex][endIndex] = pts_[startIndex];
+                    return P3PolyCoef[startIndex][endIndex]; //pts_[startIndex];
                 }
 
                 else
@@ -1444,7 +1447,7 @@ namespace mat_290_framework
                     // return ( new Point2D(DivDiffCoef(t, startIndex + 1, endIndex).x - DivDiffCoef(t, startIndex, endIndex - 1).x, DivDiffCoef(t, startIndex + 1, endIndex).y - DivDiffCoef(t, startIndex, endIndex - 1).y) / (endIndex - startIndex);
 
 
-                    P3PolyCoef[startIndex][endIndex].x = (DivDiffCoef(t, startIndex+1, endIndex).x - DivDiffCoef(t, startIndex, endIndex-1).x) / (endIndex-startIndex);
+                    P3PolyCoef[startIndex][endIndex].x = (DivDiffCoef(t, startIndex+1, endIndex).x - DivDiffCoef(t, startIndex, endIndex-1).x) / (endIndex - startIndex);
                     P3PolyCoef[startIndex][endIndex].y = (DivDiffCoef(t, startIndex+1, endIndex).y - DivDiffCoef(t, startIndex, endIndex-1).y) / (endIndex - startIndex);
 
 
