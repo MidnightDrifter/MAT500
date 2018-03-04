@@ -37,12 +37,16 @@ namespace mat_290_framework
                 P1DecastlejauCoef.Add(new List<Point2D>());
                 P2MidpointCoef.Add(new List<Point2D>());
                 P3PolyCoef.Add(new List<Point2D>());
+
+                P4SplineCoef.Add(new List<Point2D>());
+
                 for(int j=0;j<40;j++)
                     {
                     P1DecastlejauCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
                     P2MidpointCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
                     P3PolyCoef[i].Add(new Point2D(INVALID_COEF, INVALID_COEF));
                     P3Factorials.Add((int)INVALID_COEF);
+                    P4SplineCoef[i].Add(new Point2D(INVALID_COEF, INVALID_COEF));
                     if (i==0 )
                         {  
                             BinomialCoefTable[i].Add(0);   
@@ -174,7 +178,7 @@ namespace mat_290_framework
         List<List<int>> BinomialCoefTable;
         bool updateP1DeCasteljauCoef;  //True if they DO need to be updated
         List<int> P3Factorials;
-        List<List<Point2D>> P1DecastlejauCoef, P2MidpointCoef, P3PolyCoef;
+        List<List<Point2D>> P1DecastlejauCoef, P2MidpointCoef, P3PolyCoef, P4SplineCoef;
         int polyDegree;
         
 
@@ -1422,6 +1426,27 @@ namespace mat_290_framework
                     P3PolyCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
                 }
             }
+        }
+
+        private void ClearSplineCoef()
+        {
+            for(int i=0;i<P4SplineCoef.Count;i++)
+            {
+                for(int j=0;j<P3PolyCoef[i].Count;j++)
+                {
+                    P4SplineCoef[i][j] = new Point2D(INVALID_COEF, INVALID_COEF);
+                }
+            }
+        }
+
+        private float TruncPowFunc(float t, int c, int d)
+        {
+            if(t<c || d<1)  //the d<1 bit might be incorrect, check dis
+            {
+                return 0;
+            }
+
+            return (float) Math.Pow(t - c, d);
         }
 
         private Point2D DivDiffCoef(float t, int startIndex, int endIndex)  
