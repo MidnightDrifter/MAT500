@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
 namespace mat_290_framework
 {
 
@@ -31,22 +31,22 @@ namespace mat_290_framework
             P3PolyCoef = new List<List<Point2D>>();
             P3Factorials = new List<int>();
             //
-            for(int i=0;i<40;i++)
+            for(int i=0;i<MAX_VALS;i++)
                 {
                 BinomialCoefTable.Add(new List<int>());
                 P1DecastlejauCoef.Add(new List<Point2D>());
                 P2MidpointCoef.Add(new List<Point2D>());
                 P3PolyCoef.Add(new List<Point2D>());
 
-                P4SplineCoef.Add(new List<Point2D>());
+                
 
-                for(int j=0;j<40;j++)
+                for(int j=0;j<MAX_VALS;j++)
                     {
                     P1DecastlejauCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
                     P2MidpointCoef[i].Add(new Point2D(INVALID_COEF,INVALID_COEF));
                     P3PolyCoef[i].Add(new Point2D(INVALID_COEF, INVALID_COEF));
                     P3Factorials.Add((int)INVALID_COEF);
-                    P4SplineCoef[i].Add(new Point2D(INVALID_COEF, INVALID_COEF));
+                   
                     if (i==0 )
                         {  
                             BinomialCoefTable[i].Add(0);   
@@ -63,6 +63,39 @@ namespace mat_290_framework
                         {
                             BinomialCoefTable[i].Add(-5);
                         }
+
+                    if (i < 38)
+                    {
+                        if (j <= 3)
+                        {
+                            float t = (float)Math.Pow(i, j);
+                            PrecalculatedP4Coef[i, j] = t;
+                        }
+                        else
+                        {
+                            PrecalculatedP4Coef[i, j] = TruncPowFunc(i, j - 3, 3);
+                        }
+                    }
+                    else   //Last two rows are for 2nd derivative
+                    {
+                        if(j<=1)
+                        {
+                            PrecalculatedP4Coef[i, j] = 0;
+                        }
+                        else if(j==2)
+                        {
+                            PrecalculatedP4Coef[i, j] = 2;
+                        }
+                        else if(j==3)
+                        {
+                            PrecalculatedP4Coef[i, j] = 6;
+                        }
+                        else
+                        {
+                            PrecalculatedP4Coef[i, j] = SecondDerivTruncPowFunc(i, j - 3, 3);
+                        }
+                    }
+               
 
                     }
                 }
@@ -175,10 +208,18 @@ namespace mat_290_framework
 
 
         //PROJECT 1
+        const int MAX_VALS = 40;  
         List<List<int>> BinomialCoefTable;
         bool updateP1DeCasteljauCoef;  //True if they DO need to be updated
         List<int> P3Factorials;
-        List<List<Point2D>> P1DecastlejauCoef, P2MidpointCoef, P3PolyCoef, P4SplineCoef;
+        List<List<Point2D>> P1DecastlejauCoef, P2MidpointCoef, P3PolyCoef;//, P4SplineCoef;
+        //For P4 onwards, need to use the MathNet library matrices to solve lin. systems
+        //Don't think they will work with points--however, coef. matrices for X & Y will be identical, so only need to store one float
+        //Just create Point2D's on the fly when I need them
+        Matrix<float> P4SplineCoef;// = Matrix<float>.Build.Dense(MAX_VALS,MAX_VALS);
+        Matrix<float> PrecalculatedP4Coef = Matrix<float>.Build.Dense(MAX_VALS, MAX_VALS);
+
+
         int polyDegree;
         
 
@@ -1427,7 +1468,7 @@ namespace mat_290_framework
                 }
             }
         }
-
+        /*
         private void ClearSplineCoef()
         {
             for(int i=0;i<P4SplineCoef.Count;i++)
@@ -1438,6 +1479,7 @@ namespace mat_290_framework
                 }
             }
         }
+        */
 
         private float TruncPowFunc(float t, int c, int d)
         {
@@ -1448,6 +1490,36 @@ namespace mat_290_framework
 
             return (float) Math.Pow(t - c, d);
         }
+
+        private float SecondDerivTruncPowFunc(float t, int c, int d)
+        {
+            if(d<3)
+            {
+                return 0;
+            }
+            else
+            {
+                return (d * d - 1 * TruncPowFunc(t, c, d - 2));
+            }
+        }
+
+
+
+
+        private void SplineSolver(float t)
+        {
+
+
+           
+
+
+        }
+
+
+
+
+
+
 
         private Point2D DivDiffCoef(float t, int startIndex, int endIndex)  
         {
