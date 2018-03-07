@@ -64,35 +64,37 @@ namespace mat_290_framework
                             BinomialCoefTable[i].Add(-5);
                         }
 
-                    if (i < 38)
+                    if (i <2)  //First 2 rows for 2nd derivatives
                     {
-                        if (j <= 3)
-                        {
-                            float t = (float)Math.Pow(i, j);
-                            PrecalculatedP4Coef[i, j] = t;
-                        }
-                        else
-                        {
-                            PrecalculatedP4Coef[i, j] = TruncPowFunc(i, j - 3, 3);
-                        }
-                    }
-                    else   //Last two rows are for 2nd derivative
-                    {
-                        if(j<=1)
+
+                        if (j <= 1)
                         {
                             PrecalculatedP4Coef[i, j] = 0;
                         }
-                        else if(j==2)
+                        else if (j == 2)
                         {
-                            PrecalculatedP4Coef[i, j] = 2;
+                            PrecalculatedP4Coef[i, j] = 2;  //t^2 ->  2t -> 2
                         }
-                        else if(j==3)
+                        else if (j == 3)
                         {
-                            PrecalculatedP4Coef[i, j] = 6;
+                            PrecalculatedP4Coef[i, j] =18; //t^3 -> 3t^2 -> 6t   t=3
                         }
                         else
                         {
                             PrecalculatedP4Coef[i, j] = SecondDerivTruncPowFunc(i, j - 3, 3);
+                        }
+                       
+                    }
+                    else   //Rest are for actual lin. systems
+                    {
+                        if (j <= 3)
+                        {
+                            float t = (float)Math.Pow(i-2, j);
+                            PrecalculatedP4Coef[i, j] = t;
+                        }
+                        else
+                        {
+                            PrecalculatedP4Coef[i, j] = TruncPowFunc(i-2, j - 3, 3);
                         }
                     }
                
