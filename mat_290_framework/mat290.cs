@@ -1564,7 +1564,49 @@ namespace mat_290_framework
 
         private Point2D SplineInterpolate(float t)
         {
-            return new Point2D(0, 0);
+            // return new Point2D(0, 0);
+            //Maybe update this fn to be less lazy and return all pts at once
+            if (pts_.Count > 2)
+            { int numCoef = pts_.Count + 2;
+
+                var tempMatrix = PrecalculatedP4Coef.SubMatrix(0, numCoef, 0, numCoef).Inverse();
+
+                Vector<float> xVals = Vector<float>.Build.Dense(numCoef - 2);
+                Vector<float> yVals = Vector<float>.Build.Dense(pts_.Count);
+                Vector<float> xCoef = Vector<float>.Build.Dense(pts_.Count + 2);
+                Vector<float> yCoef = Vector<float>.Build.Dense(pts_.Count + 2);
+                for (int i = 0; i < pts_.Count; i++)
+                {
+                    xVals[i] = pts_[i].x;
+                    yVals[i] = pts_[i].y;
+                }
+
+
+                xCoef = tempMatrix * xVals;
+                yCoef = tempMatrix * yVals;
+
+                float outX = 0, outY = 0;
+
+                outX += xCoef[0] + t * xCoef[1] + t * t * xCoef[2] + t * t * t * xCoef[3];
+
+                outY += yCoef[0] + t * yCoef[1] + t * t * yCoef[2] + t * t * t * yCoef[3];
+
+
+                for (int i =4;i<xCoef.Count;i++)   
+                {
+                    float temp = TruncPowFunc(t, i - 3, 3);
+                    outX += xCoef[i] * temp;
+                    outY += yCoef[i] * temp;
+                }
+
+                return new Point2D(outX, outY);
+
+                }
+
+            else
+            {
+                return pts_[0];
+            }
         }
 
         private Point2D DeBoorAlgthm(float t)
