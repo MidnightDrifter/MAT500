@@ -952,14 +952,14 @@ namespace mat_290_framework
                 Point2D current_left;
                 Point2D current_right = new Point2D(SplineInterpolate(0));
 
-                for (float t = alpha; t < 1; t += alpha)
+                for (float t = alpha; t < pts_.Count; t += alpha)
                 {
                     current_left = current_right;
                     current_right = SplineInterpolate(t);
                     gfx.DrawLine(splinePen, current_left.P(), current_right.P());
                 }
 
-                gfx.DrawLine(splinePen, current_right.P(), SplineInterpolate(1).P());
+                gfx.DrawLine(splinePen, current_right.P(), SplineInterpolate(pts_.Count).P());
             }
 
             // deboor
