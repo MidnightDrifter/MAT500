@@ -69,19 +69,25 @@ namespace mat_290_framework
 
                         if (j <= 1)
                         {
-                            PrecalculatedP4Coef[i, j] = 0;
+                            //PrecalculatedP4Coef[i, j] = 0;
+                            PrecalculatedP4Coef[j, i] = 0;
                         }
                         else if (j == 2)
                         {
-                            PrecalculatedP4Coef[i, j] = 2;  //t^2 ->  2t -> 2
+                            //    PrecalculatedP4Coef[i, j] = 2;  //t^2 ->  2t -> 2
+                            PrecalculatedP4Coef[j, i] = 2;  //t^2 ->  2t -> 2
+
                         }
                         else if (j == 3)
                         {
                             PrecalculatedP4Coef[i, j] =18; //t^3 -> 3t^2 -> 6t   t=3
+                            PrecalculatedP4Coef[j, i] = 18; //t^3 -> 3t^2 -> 6t   t=3
+
                         }
                         else
                         {
-                            PrecalculatedP4Coef[i, j] = SecondDerivTruncPowFunc(i, j - 3, 3);
+                            //   PrecalculatedP4Coef[i, j] = SecondDerivTruncPowFunc(i, j - 3, 3);
+                            PrecalculatedP4Coef[j, i] = SecondDerivTruncPowFunc(i, j - 3, 3);
                         }
                        
                     }
@@ -90,11 +96,13 @@ namespace mat_290_framework
                         if (j <= 3)
                         {
                             float t = (float)Math.Pow(i-2, j);
-                            PrecalculatedP4Coef[i, j] = t;
+                            //PrecalculatedP4Coef[i, j] = t;
+                            PrecalculatedP4Coef[j, i] = t;
                         }
                         else
                         {
-                            PrecalculatedP4Coef[i, j] = TruncPowFunc(i-2, j - 3, 3);
+                            //  PrecalculatedP4Coef[i, j] = TruncPowFunc(i-2, j - 3, 3);
+                            PrecalculatedP4Coef[j, i] = TruncPowFunc(i - 2, j - 3, 3);
                         }
                     }
                
@@ -1567,15 +1575,19 @@ namespace mat_290_framework
             // return new Point2D(0, 0);
             //Maybe update this fn to be less lazy and return all pts at once
             if (pts_.Count > 2)
-            { int numCoef = pts_.Count + 2;
+            {
+                int numCoef = pts_.Count + 2;
 
-                var tempMatrix = PrecalculatedP4Coef.SubMatrix(0, numCoef, 0, numCoef).Inverse();
+                var tempMatrix = PrecalculatedP4Coef.SubMatrix(0, numCoef, 0, numCoef);   //.Inverse();
+                var tempInverse = tempMatrix.Inverse();
 
-                Vector<float> xVals = Vector<float>.Build.Dense(numCoef - 2);
-                Vector<float> yVals = Vector<float>.Build.Dense(pts_.Count);
-                Vector<float> xCoef = Vector<float>.Build.Dense(pts_.Count + 2);
-                Vector<float> yCoef = Vector<float>.Build.Dense(pts_.Count + 2);
-                for (int i = 0; i < pts_.Count; i++)
+
+                Vector<float> xVals = Vector<float>.Build.Dense(numCoef);
+                Vector<float> yVals = Vector<float>.Build.Dense(numCoef);
+                Vector<float> xCoef = Vector<float>.Build.Dense(numCoef);
+                Vector<float> yCoef = Vector<float>.Build.Dense(numCoef);
+                xVals[0] = xVals[1] = yVals[0] = yVals[1] = 0;
+                for (int i = 2; i < pts_.Count; i++)
                 {
                     xVals[i] = pts_[i].x;
                     yVals[i] = pts_[i].y;
